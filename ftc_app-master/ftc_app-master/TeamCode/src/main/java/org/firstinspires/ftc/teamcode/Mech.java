@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -71,6 +72,11 @@ public class Mech extends OpMode
         backRight = hardwareMap.get(DcMotor.class, "back right");
         backLeft = hardwareMap.get(DcMotor.class, "back left");
 
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
         telemetry.addData("status", "Initialized");
     }
 
@@ -95,8 +101,8 @@ public class Mech extends OpMode
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
-        double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+        double r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
         double rightX = gamepad1.right_stick_x;
         final double v1 = r * Math.cos(robotAngle) + rightX;
         final double v2 = r * Math.sin(robotAngle) - rightX;
@@ -107,6 +113,22 @@ public class Mech extends OpMode
         frontRight.setPower(v2);
         backLeft.setPower(v3);
         backRight.setPower(v4);
+
+        if(gamepad1.y) {
+            frontRight.setPower(1);
+        }
+
+        if(gamepad1.x) {
+            frontLeft.setPower(1);
+        }
+
+        if(gamepad1.b) {
+            backRight.setPower(1);
+        }
+
+        if(gamepad1.a) {
+            backLeft.setPower(1);
+        }
 
     }
 
