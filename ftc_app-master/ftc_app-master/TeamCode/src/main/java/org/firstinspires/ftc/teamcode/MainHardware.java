@@ -64,8 +64,8 @@ public class MainHardware
     public Orientation angles;
     public Acceleration gravity;
 
-    public static final double JEWEL_START =  -1 ;
-    public static final double JEWEL_READ = 0.55;
+    public static final double JEWEL_START = 0;
+    public static final double JEWEL_READ = 0.5;
     public static final double RED_THRESHOLD = 40;
 
 
@@ -108,7 +108,7 @@ public class MainHardware
         jewelColor = hwMap.get(ColorSensor.class, "jewel_color");
 
         //Define all parameters for and initialize the IMU
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = true;
@@ -117,7 +117,7 @@ public class MainHardware
 
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-
+*/
 
 
     }
@@ -126,7 +126,7 @@ public class MainHardware
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
-    void composeTelemetry(Telemetry telemetry) {
+   /* void composeTelemetry(Telemetry telemetry) {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
@@ -195,7 +195,7 @@ public class MainHardware
 
     String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
+    } */
 
 
  }

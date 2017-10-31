@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -52,7 +53,7 @@ import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_READ;
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
 import static org.firstinspires.ftc.teamcode.MainHardware.RED_THRESHOLD;
 
-@TeleOp(name="Red01", group="Competition Auto")
+@Autonomous(name="Red01", group="Competition Auto")
 
 public class AutoRed extends LinearOpMode {
 
@@ -70,14 +71,16 @@ public class AutoRed extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        robot.composeTelemetry(telemetry);
+//        robot.composeTelemetry(telemetry);
 
         waitForStart();
         runtime.reset();
 
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+//        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         robot.jewelDiverter.setPosition(JEWEL_READ);
+
+        sleep(1500);
 
         Color.RGBToHSV(robot.jewelColor.red(), robot.jewelColor.green(), robot.jewelColor.blue(), hsvValues);
 
