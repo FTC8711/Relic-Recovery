@@ -87,8 +87,8 @@ public class MainHardware
         // Define and Initialize Motors
         frontLeft  = hwMap.get(DcMotor.class, "1");
         frontRight = hwMap.get(DcMotor.class, "2");
-        backRight  = hwMap.get(DcMotor.class, "3");
-        backLeft   = hwMap.get(DcMotor.class, "4");
+        backLeft  = hwMap.get(DcMotor.class, "3");
+        backRight   = hwMap.get(DcMotor.class, "4");
 
 
         // Set all motors to zero power
@@ -103,7 +103,7 @@ public class MainHardware
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Define and initialize ALL installed servos.
         jewelDiverter = hwMap.get(Servo.class, "jewel");
