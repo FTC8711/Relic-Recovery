@@ -58,27 +58,29 @@ import static org.firstinspires.ftc.teamcode.MainHardware.RED_THRESHOLD;
 public class AutoRed extends LinearOpMode {
 
     // Declare OpMode members.
-    MainHardware        robot   = new MainHardware();
-    private ElapsedTime runtime = new ElapsedTime();
-    float hsvValues[] = {0F,0F,0F};
+    MainHardware        robot   = new MainHardware()
+    private ElapsedTime runtime = new ElapsedTime()
+    float hsvValues[] = {0F,0F,0F}
 
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.jewelColor.enableLed(true);
+        robot.jewelColor.enableLed(true)
 
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        telemetry.addData("Status", "Initialized")
+        telemetry.update()
 
 //        robot.composeTelemetry(telemetry);
 
         waitForStart();
         runtime.reset();
 
+        mecanumDrive(1, 1, 1, 1, 2000)
+
 //        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        robot.jewelDiverter.setPosition(JEWEL_READ);
+        /* robot.jewelDiverter.setPosition(JEWEL_READ);
 
         sleep(1500);
 
@@ -95,6 +97,8 @@ public class AutoRed extends LinearOpMode {
         robot.jewelDiverter.setPosition(JEWEL_START);
         robot.jewelColor.enableLed(false);
 
+        */
+
 
 
 
@@ -103,6 +107,16 @@ public class AutoRed extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.update();
         }
+    }
+
+    public void mecanumDrive(double v1, double v2, double v3, double v4, long time) {
+        robot.frontLeft.setPower(v1);
+        robot.frontRight.setPower(v2);
+        robot.backRight.setPower(v3);
+        robot.backLeft.setPower(v4);
+
+        sleep(time);
+//looks good my dude
     }
 
 

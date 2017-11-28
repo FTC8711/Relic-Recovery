@@ -104,8 +104,12 @@ public class TeleOpMain extends OpMode
         robot.backLeft.setPower(v3);
         robot.backRight.setPower(v4);
 
+        telemetry.addData("r: ", r);
+        telemetry.addData("robotAngle: ", robotAngle);
+        telemetry.addData("rightX: ", rightX);
+
         /*
-        DEBUGGING
+         * DEBUGGING
          */
 
         if(gamepad1.y) {
