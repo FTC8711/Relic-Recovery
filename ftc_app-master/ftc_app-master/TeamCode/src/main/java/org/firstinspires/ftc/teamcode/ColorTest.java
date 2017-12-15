@@ -95,14 +95,18 @@ public class ColorTest extends OpMode
         telemetry.addData("Blue ", color.blue());
         telemetry.addData("Hue", hsvValues[0]);
 
-        if(hsvValues[0] > 40) {
-            telemetry.addData("Jewel", "Blue");
+        if (hsvValues[0] > 210) {
+            telemetry.addData("Color ", "Red");
         }
 
+        else if (hsvValues[0] > 5) {
+            telemetry.addData("Color ", "Blue");
+        }
 
         else {
-            telemetry.addData("Jewel", "Red (probable)");
+            telemetry.addData("Color ", "Red");
         }
+
     }
 
     /*

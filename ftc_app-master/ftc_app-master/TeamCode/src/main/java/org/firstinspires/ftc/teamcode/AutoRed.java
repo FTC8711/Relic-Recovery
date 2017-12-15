@@ -40,12 +40,22 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
 
@@ -58,46 +68,132 @@ import static org.firstinspires.ftc.teamcode.MainHardware.RED_THRESHOLD;
 public class AutoRed extends LinearOpMode {
 
     // Declare OpMode members.
-    MainHardware        robot   = new MainHardware()
-    private ElapsedTime runtime = new ElapsedTime()
-    float hsvValues[] = {0F,0F,0F}
+    MainHardware        robot   = new MainHardware();
+    private ElapsedTime runtime = new ElapsedTime();
+    float hsvValues[] = {0F,0F,0F};
+
+    OpenGLMatrix lastLocation = null;
+    VuforiaLocalizer vuforia;
+
+    private enum Path {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+
+    private Path path;
+
+
 
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.jewelColor.enableLed(true)
+        robot.jewelColor.enableLed(true);
 
-        telemetry.addData("Status", "Initialized")
-        telemetry.update()
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "Ab7NcEP/////AAAAGU3lIT+010Tnsk66FEobCD4SlREK/jF55GNUnn41TQe4m7uCppwOboHMqXOsw13evfeXn/7ptt6Xk/Tl/hOpJDb+rEdawgaet7oln379ujuX4IpmkzjhcU6eaTtKVb6dYQYCK5nkSpKZU6o+pwii/qhfOQdekT1VArWa1WSrw7oXI2AM3KYXn8mSB+KHcsoeFMrFqqv5qDShrG81X3XbgxQFCbxIDsYsGnmRN5w5xoXBMm+bo8HjAlsmWWGZcEP294YBusc+X0645MPioUJalu/sGGJly4byQP7+bMcFyADhUEZz3UaYu/PCBVz6grWRd/OncikVkCFOojGf2fZq4riOQH7YaDLYmYee5Zs2a4jd"; //secure later (hopefully no one steals our key)
+
+        /*
+         * We also indicate which camera on the RC that we wish to use.
+         * Here we chose the back (HiRes) camera (for greater range), but
+         * for a competition robot, the front camera might be more convenient.
+         */
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        /**
+         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+         * in this data set: all three of the VuMarks in the game were created from this one template,
+         * but differ in their instance id information.
+         * @see VuMarkInstanceId
+         */
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate");
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
 //        robot.composeTelemetry(telemetry);
 
         waitForStart();
         runtime.reset();
 
-        mecanumDrive(1, 1, 1, 1, 2000)
+        while(getRuntime() < 2) {
+
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+                telemetry.addData("VuMark", "%s visible", vuMark);
+
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+
+            telemetry.update();
+        }
+
 
 //        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        /* robot.jewelDiverter.setPosition(JEWEL_READ);
+        robot.jewelDiverter.setPosition(JEWEL_READ);
 
         sleep(1500);
 
         Color.RGBToHSV(robot.jewelColor.red(), robot.jewelColor.green(), robot.jewelColor.blue(), hsvValues);
 
-        if(hsvValues[0] > RED_THRESHOLD) {
-            telemetry.addData("Path", "Jewel is BLUE -> Drive Backwards");
+        if (hsvValues[0] > 210) {
+            telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
+            telemetry.addData("Hue ", hsvValues[0]);
+            mecanumDrive(0.6, 0.6, 0.6, 0.6, 400);
+
+        }
+
+        else if (hsvValues[0] > 40) {
+            telemetry.addData("Path ", "Jewel is BLUE -> Drive BACKWARD");
+            telemetry.addData("Hue ", hsvValues[0]);
+            mecanumDrive(0.6, -0.6, -0.6, 0.6, 150);
+            robot.jewelDiverter.setPosition(JEWEL_START);
+            mecanumDrive(-0.6, 0.6, 0.6, -0.6, 150);
+            mecanumDrive(0.6, 0.6, 0.6, 0.6, 400);
         }
 
         else {
-            telemetry.addData("Path", "Jewel is RED -> Drive Forward");
+            telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
+            telemetry.addData("Hue ", hsvValues[0]);
+            mecanumDrive(0.6, 0.6, 0.6, 0.6, 400);
         }
 
         robot.jewelDiverter.setPosition(JEWEL_START);
         robot.jewelColor.enableLed(false);
 
-        */
+        path = Path.LEFT;
+
+        mecanumDrive(0.6, 0.6, 0.6, 0.6, 500);
+
+        switch (path) {
+            case LEFT:
+                mecanumDrive(-0.6, 0.6, -0.6, 0.6, 300);
+                break;
+            case CENTER:
+                mecanumDrive(-0.6, 0.6, -0.6, 0.6, 600);
+                break;
+            case RIGHT:
+                mecanumDrive(-0.6, 0.6, -0.6, 0.6, 900);
+                break;
+        }
+
+
+
+
 
 
 
@@ -116,7 +212,12 @@ public class AutoRed extends LinearOpMode {
         robot.backLeft.setPower(v4);
 
         sleep(time);
-//looks good my dude
+
+        robot.frontLeft.setPower(0);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.backLeft.setPower(0);
+
     }
 
 

@@ -66,8 +66,8 @@ public class MainHardware
     public Orientation angles;
     public Acceleration gravity;
 
-    public static final double JEWEL_START = 0;
-    public static final double JEWEL_READ = 0.5;
+    public static final double JEWEL_START = 0.7;
+    public static final double JEWEL_READ = 0.15;
     public static final double RED_THRESHOLD = 40;
 
 
@@ -110,7 +110,7 @@ public class MainHardware
         jewelDiverter = hwMap.get(Servo.class, "jewel");
         jewelDiverter.setPosition(JEWEL_START);
 
-        jewelColor = hwMap.get(ColorSensor.class, "jewel_color");
+        jewelColor = hwMap.colorSensor.get("jewel_color");
 
         //Define all parameters for and initialize the IMU
         /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
