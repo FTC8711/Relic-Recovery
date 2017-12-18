@@ -32,25 +32,12 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -61,7 +48,6 @@ import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_READ;
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
-import static org.firstinspires.ftc.teamcode.MainHardware.RED_THRESHOLD;
 
 @Autonomous(name="Red01", group="Competition Auto")
 
@@ -84,8 +70,6 @@ public class AutoRed extends LinearOpMode {
     private Path path;
 
 
-
-
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
@@ -96,11 +80,6 @@ public class AutoRed extends LinearOpMode {
 
         parameters.vuforiaLicenseKey = "Ab7NcEP/////AAAAGU3lIT+010Tnsk66FEobCD4SlREK/jF55GNUnn41TQe4m7uCppwOboHMqXOsw13evfeXn/7ptt6Xk/Tl/hOpJDb+rEdawgaet7oln379ujuX4IpmkzjhcU6eaTtKVb6dYQYCK5nkSpKZU6o+pwii/qhfOQdekT1VArWa1WSrw7oXI2AM3KYXn8mSB+KHcsoeFMrFqqv5qDShrG81X3XbgxQFCbxIDsYsGnmRN5w5xoXBMm+bo8HjAlsmWWGZcEP294YBusc+X0645MPioUJalu/sGGJly4byQP7+bMcFyADhUEZz3UaYu/PCBVz6grWRd/OncikVkCFOojGf2fZq4riOQH7YaDLYmYee5Zs2a4jd"; //secure later (hopefully no one steals our key)
 
-        /*
-         * We also indicate which camera on the RC that we wish to use.
-         * Here we chose the back (HiRes) camera (for greater range), but
-         * for a competition robot, the front camera might be more convenient.
-         */
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
@@ -110,6 +89,7 @@ public class AutoRed extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
+
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
@@ -122,20 +102,25 @@ public class AutoRed extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        while(getRuntime() < 2) {
+        relicTrackables.activate();
+
+        while(runtime.seconds() < 2) {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
-
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
-            } else {
-                telemetry.addData("VuMark", "not visible");
+            switch (vuMark) {
+                case LEFT:
+                    path = Path.LEFT;
+                    break;
+                case CENTER:
+                    path = Path.CENTER;
+                    break;
+                case RIGHT:
+                    path = Path.RIGHT;
+                    break;
+                default:
+                    path = Path.LEFT;
+                    break;
             }
 
             telemetry.update();
