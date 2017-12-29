@@ -56,7 +56,7 @@ public class AutoRed extends LinearOpMode {
     // Declare OpMode members.
     MainHardware        robot   = new MainHardware();
     private ElapsedTime runtime = new ElapsedTime();
-    float hsvValues[] = {0F,0F,0F};
+    private float hsvValues[] = {0F,0F,0F};
 
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
@@ -104,9 +104,10 @@ public class AutoRed extends LinearOpMode {
 
         relicTrackables.activate();
 
-        while(runtime.seconds() < 2) {
+        while(runtime.seconds() < 2 && opModeIsActive()) {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            telemetry.addData("VuMark", "%s visible", vuMark);
 
             switch (vuMark) {
                 case LEFT:
@@ -138,51 +139,65 @@ public class AutoRed extends LinearOpMode {
         if (hsvValues[0] > 210) {
             telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
-            mecanumDrive(0.6, 0.6, 0.6, 0.6, 400);
+
+            robot.drive(0.6);
+            sleep(400);
+            robot.stopDrive();
 
         }
 
         else if (hsvValues[0] > 40) {
             telemetry.addData("Path ", "Jewel is BLUE -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
-            mecanumDrive(0.6, -0.6, -0.6, 0.6, 150);
+
+            robot.turnRight(0.6);
+            sleep(150);
+            robot.stopDrive();
+
             robot.jewelDiverter.setPosition(JEWEL_START);
-            mecanumDrive(-0.6, 0.6, 0.6, -0.6, 150);
-            mecanumDrive(0.6, 0.6, 0.6, 0.6, 400);
+
+            robot.turnLeft(0.6);
+            sleep(150);
+            robot.stopDrive();
+
+            robot.drive(0.6);
+            sleep(400);
+            robot.stopDrive();
         }
 
         else {
             telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
-            mecanumDrive(0.6, 0.6, 0.6, 0.6, 400);
+
+            robot.drive(0.6);
+            sleep(400);
+            robot.stopDrive();
         }
 
         robot.jewelDiverter.setPosition(JEWEL_START);
         robot.jewelColor.enableLed(false);
 
-        path = Path.LEFT;
-
-        mecanumDrive(0.6, 0.6, 0.6, 0.6, 500);
+        robot.drive(0.6);
+        sleep(500);
+        robot.stopDrive();
 
         switch (path) {
             case LEFT:
-                mecanumDrive(-0.6, 0.6, -0.6, 0.6, 300);
+                robot.strafeLeft(0.6);
+                sleep(300);
+                robot.stopDrive();
                 break;
             case CENTER:
-                mecanumDrive(-0.6, 0.6, -0.6, 0.6, 600);
+                robot.strafeLeft(0.6);
+                sleep(600);
+                robot.stopDrive();
                 break;
             case RIGHT:
-                mecanumDrive(-0.6, 0.6, -0.6, 0.6, 900);
+                robot.strafeLeft(0.6);
+                sleep(900);
+                robot.stopDrive();
                 break;
         }
-
-
-
-
-
-
-
-
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -190,20 +205,20 @@ public class AutoRed extends LinearOpMode {
         }
     }
 
-    public void mecanumDrive(double v1, double v2, double v3, double v4, long time) {
-        robot.frontLeft.setPower(v1);
-        robot.frontRight.setPower(v2);
-        robot.backRight.setPower(v3);
-        robot.backLeft.setPower(v4);
-
-        sleep(time);
-
-        robot.frontLeft.setPower(0);
-        robot.frontRight.setPower(0);
-        robot.backRight.setPower(0);
-        robot.backLeft.setPower(0);
-
-    }
+//    private void mecanumDrive(double v1, double v2, double v3, double v4, long time) {
+//        robot.frontLeft.setPower(v1);
+//        robot.frontRight.setPower(v2);
+//        robot.backRight.setPower(v3);
+//        robot.backLeft.setPower(v4);
+//
+//        sleep(time);
+//
+//        robot.frontLeft.setPower(0);
+//        robot.frontRight.setPower(0);
+//        robot.backRight.setPower(0);
+//        robot.backLeft.setPower(0);
+//
+//    }
 
 
 

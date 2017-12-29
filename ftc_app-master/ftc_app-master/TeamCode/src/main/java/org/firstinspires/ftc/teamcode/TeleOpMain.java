@@ -35,42 +35,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="TeleOp - Main", group="Competition TeleOp")
 
-public class TeleOpMain extends OpMode
-{
+public class TeleOpMain extends OpMode {
+
     MainHardware robot = new MainHardware();
     private ElapsedTime runtime = new ElapsedTime();
 
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
-
-
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
     @Override
     public void init_loop() {
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         telemetry.addData("Status", "Running");
         runtime.reset();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
@@ -91,33 +76,48 @@ public class TeleOpMain extends OpMode
         telemetry.addData("robotAngle: ", robotAngle);
         telemetry.addData("rightX: ", rightX);
 
+        if (gamepad1.right_bumper) {
+            robot.intakeL.setPower(1);
+            robot.intakeR.setPower(1);
+        } else {
+            robot.intakeL.setPower(0);
+            robot.intakeR.setPower(0);
+        }
+
+        if (gamepad1.dpad_up) {
+            robot.ramp.setPower(1);
+        } else {
+            robot.ramp.setPower(0);
+        }
+
+        if (gamepad1.dpad_down) {
+            robot.ramp.setPower(-1);
+        } else {
+            robot.ramp.setPower(0);
+        }
+
         /*
          * DEBUGGING
          */
 
-        if(gamepad1.y) {
+        if (gamepad1.y) {
             robot.frontRight.setPower(1);
         }
 
-        if(gamepad1.x) {
+        if (gamepad1.x) {
             robot.frontLeft.setPower(1);
         }
 
-        if(gamepad1.b) {
+        if (gamepad1.b) {
             robot.backRight.setPower(1);
         }
 
-        if(gamepad1.a) {
+        if (gamepad1.a) {
             robot.backLeft.setPower(1);
         }
 
-
-
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
     @Override
     public void stop() {
     }

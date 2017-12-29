@@ -58,9 +58,15 @@ public class MainHardware
     public DcMotor     frontRight;
     public DcMotor     backRight;
     public DcMotor     backLeft;
+
+    public DcMotor     intakeL;
+    public DcMotor     intakeR;
+
+    public DcMotor     relicExtender;
+    public DcMotor     ramp;
+
     public Servo       jewelDiverter;
     public ColorSensor jewelColor;
-
 
     public BNO055IMU imu;
     public Orientation angles;
@@ -86,10 +92,13 @@ public class MainHardware
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        frontLeft  = hwMap.get(DcMotor.class, "1");
+        frontLeft = hwMap.get(DcMotor.class, "1");
         frontRight = hwMap.get(DcMotor.class, "2");
-        backLeft  = hwMap.get(DcMotor.class, "3");
-        backRight   = hwMap.get(DcMotor.class, "4");
+        backLeft = hwMap.get(DcMotor.class, "3");
+        backRight = hwMap.get(DcMotor.class, "4");
+
+        intakeL = hwMap.get(DcMotor.class, "intakeL");
+        intakeR = hwMap.get(DcMotor.class, "intakeR");
 
 
         // Set all motors to zero power
@@ -98,6 +107,9 @@ public class MainHardware
         backRight.setPower(0);
         backLeft.setPower(0);
 
+        intakeL.setPower(0);
+        intakeR.setPower(0);
+
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -105,6 +117,8 @@ public class MainHardware
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        intakeL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Define and initialize ALL installed servos.
         jewelDiverter = hwMap.get(Servo.class, "jewel");
@@ -124,7 +138,48 @@ public class MainHardware
         imu.initialize(parameters);
 */
 
+    }
 
+    void manualDrive(double v1, double v2, double v3, double v4) {
+        frontLeft.setPower(v1);
+        frontRight.setPower(v2);
+        backRight.setPower(v3);
+        backLeft.setPower(v4);
+    }
+
+    void drive(double power) {
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backRight.setPower(power);
+        backLeft.setPower(power);
+    }
+
+    void turnRight(double power) {
+        frontLeft.setPower(power);
+        frontRight.setPower(-power);
+        backRight.setPower(-power);
+        backLeft.setPower(power);
+    }
+
+    void turnLeft(double power) {
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backRight.setPower(power);
+        backLeft.setPower(-power);
+    }
+
+    void strafeLeft(double power) {
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backRight.setPower(-power);
+        backLeft.setPower(power);
+    }
+
+    void stopDrive() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        backLeft.setPower(0);
     }
 
 
