@@ -111,12 +111,15 @@ public class AutoRed extends LinearOpMode {
 
             switch (vuMark) {
                 case LEFT:
+                    telemetry.addData("Path", "Left");
                     path = Path.LEFT;
                     break;
                 case CENTER:
+                    telemetry.addData("Path", "Center");
                     path = Path.CENTER;
                     break;
                 case RIGHT:
+                    telemetry.addData("Path", "Right");
                     path = Path.RIGHT;
                     break;
                 default:
@@ -146,7 +149,7 @@ public class AutoRed extends LinearOpMode {
 
         }
 
-        else if (hsvValues[0] > 40) {
+        else if (hsvValues[0] > 60) {
             telemetry.addData("Path ", "Jewel is BLUE -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
@@ -178,7 +181,7 @@ public class AutoRed extends LinearOpMode {
         robot.jewelColor.enableLed(false);
 
         robot.drive(0.6);
-        sleep(500);
+        sleep(400);
         robot.stopDrive();
 
         switch (path) {
@@ -189,15 +192,29 @@ public class AutoRed extends LinearOpMode {
                 break;
             case CENTER:
                 robot.strafeLeft(0.6);
-                sleep(600);
+                sleep(800);
                 robot.stopDrive();
                 break;
             case RIGHT:
                 robot.strafeLeft(0.6);
-                sleep(900);
+                sleep(1100);
                 robot.stopDrive();
                 break;
         }
+
+        robot.runIntake(-1);
+        sleep(1000);
+        robot.runIntake(0);
+
+        sleep(500);
+
+        robot.drive(1);
+        sleep(400);
+        robot.stopDrive();
+
+        robot.drive(-1);
+        sleep(300);
+        robot.stopDrive();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {

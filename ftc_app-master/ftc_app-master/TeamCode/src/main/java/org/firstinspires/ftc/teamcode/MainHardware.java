@@ -100,6 +100,7 @@ public class MainHardware
         intakeL = hwMap.get(DcMotor.class, "intakeL");
         intakeR = hwMap.get(DcMotor.class, "intakeR");
 
+        ramp = hwMap.get(DcMotor.class, "ramp");
 
         // Set all motors to zero power
         frontLeft.setPower(0);
@@ -118,7 +119,8 @@ public class MainHardware
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        intakeL.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeL.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Define and initialize ALL installed servos.
         jewelDiverter = hwMap.get(Servo.class, "jewel");
@@ -180,6 +182,11 @@ public class MainHardware
         frontRight.setPower(0);
         backRight.setPower(0);
         backLeft.setPower(0);
+    }
+
+    void runIntake(double power) {
+        intakeL.setPower(power);
+        intakeR.setPower(power);
     }
 
 

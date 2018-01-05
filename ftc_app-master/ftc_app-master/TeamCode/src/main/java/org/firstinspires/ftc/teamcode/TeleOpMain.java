@@ -79,22 +79,28 @@ public class TeleOpMain extends OpMode {
         if (gamepad1.right_bumper) {
             robot.intakeL.setPower(1);
             robot.intakeR.setPower(1);
+        } else if (gamepad1.left_bumper){
+            robot.intakeL.setPower(-1);
+            robot.intakeR.setPower(-1);
         } else {
             robot.intakeL.setPower(0);
             robot.intakeR.setPower(0);
         }
 
+
         if (gamepad1.dpad_up) {
-            robot.ramp.setPower(1);
+            robot.ramp.setPower(-0.65);
+        } else if (gamepad1.dpad_down){
+            robot.ramp.setPower(0.65);
         } else {
             robot.ramp.setPower(0);
         }
 
-        if (gamepad1.dpad_down) {
-            robot.ramp.setPower(-1);
-        } else {
-            robot.ramp.setPower(0);
-        }
+//        if (gamepad1.dpad_down) {
+//            robot.ramp.setPower(1);
+//        } else {
+//            robot.ramp.setPower(0);
+
 
         /*
          * DEBUGGING
