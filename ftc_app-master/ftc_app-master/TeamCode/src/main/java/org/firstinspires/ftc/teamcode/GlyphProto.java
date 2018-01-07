@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="GlyphProto", group="Iterative Opmode")
-
+@Disabled
 public class GlyphProto extends OpMode
 {
     // Declare OpMode members.

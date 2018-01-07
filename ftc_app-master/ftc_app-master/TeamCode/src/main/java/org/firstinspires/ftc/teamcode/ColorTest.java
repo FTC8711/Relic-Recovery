@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="Color Test", group="Concept")
-
+@Disabled
 public class ColorTest extends OpMode
 {
     // Declare OpMode members.

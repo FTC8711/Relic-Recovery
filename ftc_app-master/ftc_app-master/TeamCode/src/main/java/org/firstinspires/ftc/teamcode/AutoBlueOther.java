@@ -41,17 +41,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_READ;
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
 
-@Autonomous(name="Red01", group="Competition Auto")
+@Autonomous(name="Blue02", group="Competition Auto")
 
-public class AutoRed extends LinearOpMode {
+public class AutoBlueOther extends LinearOpMode {
 
     // Declare OpMode members.
     MainHardware        robot   = new MainHardware();
@@ -159,11 +156,11 @@ public class AutoRed extends LinearOpMode {
 
             robot.jewelDiverter.setPosition(JEWEL_START);
 
-            robot.turnLeft(0.6);
+            robot.turnRight(0.6);
             sleep(150);
             robot.stopDrive();
 
-            robot.drive(0.6);
+            robot.drive(-0.6);
             sleep(400);
             robot.stopDrive();
         }
@@ -172,7 +169,7 @@ public class AutoRed extends LinearOpMode {
             telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.drive(0.6);
+            robot.drive(-0.6);
             sleep(400);
             robot.stopDrive();
         }
@@ -180,8 +177,14 @@ public class AutoRed extends LinearOpMode {
         robot.jewelDiverter.setPosition(JEWEL_START);
         robot.jewelColor.enableLed(false);
 
-        robot.drive(0.6);
+        // drive forward off of platform
+        robot.drive(-0.6);
         sleep(400);
+        robot.stopDrive();
+
+        // turn to face cryptobox
+        robot.turnLeft(0.5);
+        sleep(700);
         robot.stopDrive();
 
         switch (path) {

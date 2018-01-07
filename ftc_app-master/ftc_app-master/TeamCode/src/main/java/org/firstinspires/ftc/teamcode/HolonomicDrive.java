@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Student on 9/14/2017.
  */
 @TeleOp(name="Holonomic Drive", group="Concept")
+@Disabled
 public class HolonomicDrive extends OpMode {
     private DcMotor frontRight = null;
     private DcMotor frontLeft = null;

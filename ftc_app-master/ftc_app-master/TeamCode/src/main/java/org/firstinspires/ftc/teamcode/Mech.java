@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Mech", group="Iterative Opmode")
-
+@Disabled
 public class Mech extends OpMode
 {
     private DcMotor frontRight = null;

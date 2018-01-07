@@ -41,17 +41,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_READ;
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
 
-@Autonomous(name="Red01", group="Competition Auto")
+@Autonomous(name="Red02", group="Competition Auto")
 
-public class AutoRed extends LinearOpMode {
+public class AutoRedOther extends LinearOpMode {
 
     // Declare OpMode members.
     MainHardware        robot   = new MainHardware();
@@ -72,9 +69,11 @@ public class AutoRed extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // initialize hardware
         robot.init(hardwareMap);
         robot.jewelColor.enableLed(true);
 
+        // initialize and start Vuforia tracking
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -104,11 +103,13 @@ public class AutoRed extends LinearOpMode {
 
         relicTrackables.activate();
 
+        // give robot two seconds to look for vuMark
         while(runtime.seconds() < 2 && opModeIsActive()) {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("VuMark", "%s visible", vuMark);
 
+            // decide path based on vuMark, default to left
             switch (vuMark) {
                 case LEFT:
                     telemetry.addData("Path", "Left");
@@ -133,12 +134,14 @@ public class AutoRed extends LinearOpMode {
 
 //        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
+        // lower diverter to read jewels
         robot.jewelDiverter.setPosition(JEWEL_READ);
 
         sleep(1500);
 
         Color.RGBToHSV(robot.jewelColor.red(), robot.jewelColor.green(), robot.jewelColor.blue(), hsvValues);
 
+        // knock opposite alliance's jewel off
         if (hsvValues[0] > 210) {
             telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
@@ -180,10 +183,17 @@ public class AutoRed extends LinearOpMode {
         robot.jewelDiverter.setPosition(JEWEL_START);
         robot.jewelColor.enableLed(false);
 
+        // drive forward off of platform
         robot.drive(0.6);
         sleep(400);
         robot.stopDrive();
 
+        // turn to face cryptobox
+        robot.turnRight(0.5);
+        sleep(700);
+        robot.stopDrive();
+
+        // strafe to cryptokey column
         switch (path) {
             case LEFT:
                 robot.strafeLeft(0.6);
@@ -202,6 +212,7 @@ public class AutoRed extends LinearOpMode {
                 break;
         }
 
+        // "spit out" glyph and push it forward
         robot.runIntake(-1);
         sleep(1000);
         robot.runIntake(0);
@@ -212,6 +223,7 @@ public class AutoRed extends LinearOpMode {
         sleep(400);
         robot.stopDrive();
 
+        // back up as to not be touching glyph, stay parked
         robot.drive(-1);
         sleep(300);
         robot.stopDrive();

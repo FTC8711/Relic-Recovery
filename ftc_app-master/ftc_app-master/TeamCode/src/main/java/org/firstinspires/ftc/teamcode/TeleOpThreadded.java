@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,6 +15,8 @@ import java.io.InterruptedIOException;
  */
 
 @TeleOp(name = "TeleOp - Threadded", group = "Experimental TeleOp")
+@Disabled
+
 public class TeleOpThreadded extends LinearOpMode {
     MainHardware robot = new MainHardware();
     private ElapsedTime runtime  = new ElapsedTime();

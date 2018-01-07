@@ -37,21 +37,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_READ;
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
 
-@Autonomous(name="Red01", group="Competition Auto")
+@Autonomous(name="Blue01", group="Competition Auto")
 
-public class AutoRed extends LinearOpMode {
+public class AutoBlue extends LinearOpMode {
 
     // Declare OpMode members.
     MainHardware        robot   = new MainHardware();
@@ -133,6 +132,8 @@ public class AutoRed extends LinearOpMode {
 
 //        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
+
+
         robot.jewelDiverter.setPosition(JEWEL_READ);
 
         sleep(1500);
@@ -140,39 +141,39 @@ public class AutoRed extends LinearOpMode {
         Color.RGBToHSV(robot.jewelColor.red(), robot.jewelColor.green(), robot.jewelColor.blue(), hsvValues);
 
         if (hsvValues[0] > 210) {
-            telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
+            telemetry.addData("Path ", "Jewel is RED -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.drive(0.6);
+            robot.drive(-0.6);
             sleep(400);
             robot.stopDrive();
 
         }
 
         else if (hsvValues[0] > 60) {
-            telemetry.addData("Path ", "Jewel is BLUE -> Drive BACKWARD");
+            telemetry.addData("Path ", "Jewel is BLUE -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
-
-            robot.turnRight(0.6);
-            sleep(150);
-            robot.stopDrive();
-
-            robot.jewelDiverter.setPosition(JEWEL_START);
 
             robot.turnLeft(0.6);
             sleep(150);
             robot.stopDrive();
 
-            robot.drive(0.6);
+            robot.jewelDiverter.setPosition(JEWEL_START);
+
+            robot.turnRight(0.6);
+            sleep(150);
+            robot.stopDrive();
+
+            robot.drive(-0.6);
             sleep(400);
             robot.stopDrive();
         }
 
         else {
-            telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
+            telemetry.addData("Path ", "Jewel is RED -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.drive(0.6);
+            robot.drive(-0.6);
             sleep(400);
             robot.stopDrive();
         }
@@ -180,7 +181,7 @@ public class AutoRed extends LinearOpMode {
         robot.jewelDiverter.setPosition(JEWEL_START);
         robot.jewelColor.enableLed(false);
 
-        robot.drive(0.6);
+        robot.drive(-0.6);
         sleep(400);
         robot.stopDrive();
 
