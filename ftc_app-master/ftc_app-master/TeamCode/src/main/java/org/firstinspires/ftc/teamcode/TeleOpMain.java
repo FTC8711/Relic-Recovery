@@ -88,19 +88,21 @@ public class TeleOpMain extends OpMode {
         }
 
 
-        if (gamepad1.dpad_up) {
-            robot.ramp.setPower(-0.65);
-        } else if (gamepad1.dpad_down){
-            robot.ramp.setPower(0.65);
+        if (gamepad2.dpad_up) {
+            robot.ramp.setPower(-0.75);
+        } else if (gamepad2.dpad_down){
+            robot.ramp.setPower(0.75);
         } else {
             robot.ramp.setPower(0);
         }
 
-//        if (gamepad1.dpad_down) {
-//            robot.ramp.setPower(1);
-//        } else {
-//            robot.ramp.setPower(0);
-
+        if (gamepad2.dpad_left) {
+            robot.relicExtender.setPower(-1);
+        } else if (gamepad2.dpad_right) {
+            robot.relicExtender.setPower(1);
+        } else {
+            robot.relicExtender.setPower(0);
+        }
 
         /*
          * DEBUGGING

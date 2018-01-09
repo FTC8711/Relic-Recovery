@@ -102,6 +102,8 @@ public class MainHardware
 
         ramp = hwMap.get(DcMotor.class, "ramp");
 
+        relicExtender = hwMap.get(DcMotor.class, "relic_extender");
+
         // Set all motors to zero power
         frontLeft.setPower(0);
         frontRight.setPower(0);
