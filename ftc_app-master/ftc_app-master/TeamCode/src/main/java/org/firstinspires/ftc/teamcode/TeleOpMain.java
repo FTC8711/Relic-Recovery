@@ -33,6 +33,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_GRABBED;
+import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_START;
+
 @TeleOp(name="TeleOp - Main", group="Competition TeleOp")
 
 public class TeleOpMain extends OpMode {
@@ -87,7 +90,6 @@ public class TeleOpMain extends OpMode {
             robot.intakeR.setPower(0);
         }
 
-
         if (gamepad2.dpad_up) {
             robot.ramp.setPower(-0.75);
         } else if (gamepad2.dpad_down){
@@ -102,6 +104,20 @@ public class TeleOpMain extends OpMode {
             robot.relicExtender.setPower(1);
         } else {
             robot.relicExtender.setPower(0);
+        }
+
+        if (gamepad2.x) {
+            robot.relicPivot.setPower(1);
+        } else if (gamepad2.b) {
+            robot.relicPivot.setPower(-1);
+        } else {
+            robot.relicPivot.setPower(0);
+        }
+
+        if (gamepad2.a) {
+            robot.relicGrab.setPosition(RELIC_GRAB_GRABBED);
+        } else if (gamepad2.y) {
+            robot.relicGrab.setPosition(RELIC_GRAB_START);
         }
 
         /*

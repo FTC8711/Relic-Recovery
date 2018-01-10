@@ -34,6 +34,7 @@ import android.graphics.drawable.GradientDrawable;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -68,6 +69,9 @@ public class MainHardware
     public Servo       jewelDiverter;
     public ColorSensor jewelColor;
 
+    public CRServo relicPivot;
+    public Servo       relicGrab;
+
 //    public BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
@@ -76,6 +80,9 @@ public class MainHardware
     public static final double JEWEL_READ = 0.15;
     public static final double RED_THRESHOLD = 40;
 
+    public static final double RELIC_PIVOT_START = 0;
+    public static final double RELIC_GRAB_START = 0.7;
+    public static final double RELIC_GRAB_GRABBED = 0;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -127,6 +134,12 @@ public class MainHardware
         // Define and initialize ALL installed servos.
         jewelDiverter = hwMap.get(Servo.class, "jewel");
         jewelDiverter.setPosition(JEWEL_START);
+
+        relicPivot = hwMap.get(CRServo.class, "relic_pivot");
+        relicPivot.setPower(0);
+
+        relicGrab = hwMap.get(Servo.class, "relic_grab");
+        relicGrab.setPosition(RELIC_GRAB_START);
 
         jewelColor = hwMap.colorSensor.get("jewel_color");
 
