@@ -140,8 +140,8 @@ public class AutoBlueOther extends LinearOpMode {
             telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.drive(0.6);
-            sleep(400);
+            robot.turnRight(0.6);
+            sleep(150);
             robot.stopDrive();
 
         }
@@ -150,15 +150,8 @@ public class AutoBlueOther extends LinearOpMode {
             telemetry.addData("Path ", "Jewel is BLUE -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.turnRight(0.6);
-            sleep(150);
-            robot.stopDrive();
+            robot.drive(-0.6);
 
-            robot.jewelDiverter.setPosition(JEWEL_START);
-
-            robot.turnRight(0.6);
-            sleep(150);
-            robot.stopDrive();
 
             robot.drive(-0.6);
             sleep(400);

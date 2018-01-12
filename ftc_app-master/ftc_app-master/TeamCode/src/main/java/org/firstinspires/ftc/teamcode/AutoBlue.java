@@ -185,6 +185,12 @@ public class AutoBlue extends LinearOpMode {
         sleep(400);
         robot.stopDrive();
 
+        robot.turnRight(0.6);
+        sleep(1000);
+        robot.stopDrive();
+
+        //can u count
+
         switch (path) {
             case LEFT:
                 robot.strafeLeft(0.6);

@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
 import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_GRABBED;
 import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_START;
 
@@ -70,6 +71,8 @@ public class TeleOpMain extends OpMode {
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
 
+        robot.jewelDiverter.setPosition(JEWEL_START);
+
         robot.frontLeft.setPower(v1);
         robot.frontRight.setPower(v2);
         robot.backLeft.setPower(v3);
@@ -91,17 +94,17 @@ public class TeleOpMain extends OpMode {
         }
 
         if (gamepad2.dpad_up) {
-            robot.ramp.setPower(-0.75);
+            robot.ramp.setPower(-0.45);
         } else if (gamepad2.dpad_down){
-            robot.ramp.setPower(0.75);
+            robot.ramp.setPower(0.45);
         } else {
             robot.ramp.setPower(0);
         }
 
         if (gamepad2.dpad_left) {
-            robot.relicExtender.setPower(-1);
-        } else if (gamepad2.dpad_right) {
             robot.relicExtender.setPower(1);
+        } else if (gamepad2.dpad_right) {
+            robot.relicExtender.setPower(-1);
         } else {
             robot.relicExtender.setPower(0);
         }
