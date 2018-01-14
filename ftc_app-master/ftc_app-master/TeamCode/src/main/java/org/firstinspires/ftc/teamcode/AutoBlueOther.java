@@ -140,8 +140,8 @@ public class AutoBlueOther extends LinearOpMode {
             telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.turnRight(0.6);
-            sleep(150);
+            robot.drive(0.6);
+            sleep(400);
             robot.stopDrive();
 
         }
@@ -150,8 +150,15 @@ public class AutoBlueOther extends LinearOpMode {
             telemetry.addData("Path ", "Jewel is BLUE -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.drive(-0.6);
+            robot.turnRight(0.6);
+            sleep(150);
+            robot.stopDrive();
 
+            robot.jewelDiverter.setPosition(JEWEL_START);
+
+            robot.turnRight(0.6);
+            sleep(150);
+            robot.stopDrive();
 
             robot.drive(-0.6);
             sleep(400);
@@ -175,41 +182,41 @@ public class AutoBlueOther extends LinearOpMode {
         sleep(400);
         robot.stopDrive();
 
-        // turn to face cryptobox
-        robot.turnLeft(0.5);
-        sleep(700);
-        robot.stopDrive();
-
-        switch (path) {
-            case LEFT:
-                robot.strafeLeft(0.6);
-                sleep(300);
-                robot.stopDrive();
-                break;
-            case CENTER:
-                robot.strafeLeft(0.6);
-                sleep(800);
-                robot.stopDrive();
-                break;
-            case RIGHT:
-                robot.strafeLeft(0.6);
-                sleep(1100);
-                robot.stopDrive();
-                break;
-        }
-
-        robot.runIntake(-1);
-        sleep(1000);
-        robot.runIntake(0);
-
-        sleep(500);
-
-        robot.drive(1);
-        sleep(400);
-        robot.stopDrive();
-
-        robot.drive(-1);
-        sleep(300);
+//        // turn to face cryptobox
+//        robot.turnLeft(0.5);
+//        sleep(700);
+//        robot.stopDrive();
+//
+//        switch (path) {
+//            case LEFT:
+//                robot.strafeLeft(0.6);
+//                sleep(300);
+//                robot.stopDrive();
+//                break;
+//            case CENTER:
+//                robot.strafeLeft(0.6);
+//                sleep(800);
+//                robot.stopDrive();
+//                break;
+//            case RIGHT:
+//                robot.strafeLeft(0.6);
+//                sleep(1100);
+//                robot.stopDrive();
+//                break;
+//        }
+//
+//        robot.runIntake(-1);
+//        sleep(1000);
+//        robot.runIntake(0);
+//
+//        sleep(500);
+//
+//        robot.drive(1);
+//        sleep(400);
+//        robot.stopDrive();
+//
+//        robot.drive(-1);
+//        sleep(300);
         robot.stopDrive();
 
         // run until the end of the match (driver presses STOP)

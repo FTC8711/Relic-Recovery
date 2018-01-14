@@ -185,42 +185,40 @@ public class AutoBlue extends LinearOpMode {
         sleep(400);
         robot.stopDrive();
 
-        robot.turnRight(0.6);
-        sleep(1000);
+        robot.strafeLeft(0.6);
+        sleep(800);
         robot.stopDrive();
 
-        //can u count
-
-        switch (path) {
-            case LEFT:
-                robot.strafeLeft(0.6);
-                sleep(300);
-                robot.stopDrive();
-                break;
-            case CENTER:
-                robot.strafeLeft(0.6);
-                sleep(800);
-                robot.stopDrive();
-                break;
-            case RIGHT:
-                robot.strafeLeft(0.6);
-                sleep(1100);
-                robot.stopDrive();
-                break;
-        }
-
-        robot.runIntake(-1);
-        sleep(1000);
-        robot.runIntake(0);
-
-        sleep(500);
-
-        robot.drive(1);
-        sleep(400);
-        robot.stopDrive();
-
-        robot.drive(-1);
-        sleep(300);
+//        switch (path) {
+//            case LEFT:
+//                robot.strafeLeft(0.6);
+//                sleep(300);
+//                robot.stopDrive();
+//                break;
+//            case CENTER:
+//                robot.strafeLeft(0.6);
+//                sleep(800);
+//                robot.stopDrive();
+//                break;
+//            case RIGHT:
+//                robot.strafeLeft(0.6);
+//                sleep(1100);
+//                robot.stopDrive();
+//                break;
+//        }
+//
+//        robot.runIntake(-1);
+//        sleep(1000);
+//        robot.runIntake(0);
+//
+//        sleep(500);
+//
+//        robot.drive(1);
+//        sleep(400);
+//        robot.stopDrive();
+//
+//        robot.drive(-1);
+//        sleep(300);
         robot.stopDrive();
 
         // run until the end of the match (driver presses STOP)
