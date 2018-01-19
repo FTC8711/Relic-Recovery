@@ -137,20 +137,20 @@ public class AutoBlueOther extends LinearOpMode {
         Color.RGBToHSV(robot.jewelColor.red(), robot.jewelColor.green(), robot.jewelColor.blue(), hsvValues);
 
         if (hsvValues[0] > 210) {
-            telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
+            telemetry.addData("Path ", "Jewel is RED -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.drive(0.6);
+            robot.drive(-0.6);
             sleep(400);
             robot.stopDrive();
 
         }
 
         else if (hsvValues[0] > 60) {
-            telemetry.addData("Path ", "Jewel is BLUE -> Drive BACKWARD");
+            telemetry.addData("Path ", "Jewel is BLUE -> Drive FORWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
-            robot.turnRight(0.6);
+            robot.turnLeft(0.6);
             sleep(150);
             robot.stopDrive();
 
@@ -166,7 +166,7 @@ public class AutoBlueOther extends LinearOpMode {
         }
 
         else {
-            telemetry.addData("Path ", "Jewel is RED -> Drive FORWARD");
+            telemetry.addData("Path ", "Jewel is RED -> Drive BACKWARD");
             telemetry.addData("Hue ", hsvValues[0]);
 
             robot.drive(-0.6);
@@ -177,47 +177,49 @@ public class AutoBlueOther extends LinearOpMode {
         robot.jewelDiverter.setPosition(JEWEL_START);
         robot.jewelColor.enableLed(false);
 
-        // drive forward off of platform
         robot.drive(-0.6);
         sleep(400);
         robot.stopDrive();
 
-//        // turn to face cryptobox
-//        robot.turnLeft(0.5);
-//        sleep(700);
-//        robot.stopDrive();
-//
-//        switch (path) {
-//            case LEFT:
-//                robot.strafeLeft(0.6);
-//                sleep(300);
-//                robot.stopDrive();
-//                break;
-//            case CENTER:
-//                robot.strafeLeft(0.6);
-//                sleep(800);
-//                robot.stopDrive();
-//                break;
-//            case RIGHT:
-//                robot.strafeLeft(0.6);
-//                sleep(1100);
-//                robot.stopDrive();
-//                break;
-//        }
-//
-//        robot.runIntake(-1);
-//        sleep(1000);
-//        robot.runIntake(0);
-//
-//        sleep(500);
-//
-//        robot.drive(1);
-//        sleep(400);
-//        robot.stopDrive();
-//
-//        robot.drive(-1);
-//        sleep(300);
+        robot.turnLeft(0.6);
+        sleep(650);
         robot.stopDrive();
+
+        switch (path) {
+            case LEFT:
+                break;
+            case CENTER:
+                robot.strafeLeft(0.6);
+                sleep(700);
+                robot.stopDrive();
+                break;
+            case RIGHT:
+                robot.strafeLeft(0.6);
+                sleep(900);
+                robot.stopDrive();
+                break;
+        }
+
+        robot.intakeL.setPower(1);
+        robot.intakeR.setPower(1);
+        robot.ramp.setPower(-0.45);
+        sleep(800);
+        robot.ramp.setPower(0.45);
+        robot.intakeL.setPower(0);
+        robot.intakeR.setPower(0);
+        sleep(800);
+        robot.ramp.setPower(0);
+
+        sleep(1200);
+
+        robot.drive(-0.6);
+        sleep(200);
+        robot.stopDrive();
+
+        robot.drive(0.6);
+        sleep(200);
+        robot.stopDrive();
+
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {

@@ -76,7 +76,7 @@ public class MainHardware
     public Orientation angles;
     public Acceleration gravity;
 
-    public static final double JEWEL_START = 0.7;
+    public static final double JEWEL_START = 0.8;
     public static final double JEWEL_READ = 0.15;
     public static final double RED_THRESHOLD = 40;
 

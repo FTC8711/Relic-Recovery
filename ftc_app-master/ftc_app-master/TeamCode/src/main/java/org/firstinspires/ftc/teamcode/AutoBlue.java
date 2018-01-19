@@ -132,7 +132,7 @@ public class AutoBlue extends LinearOpMode {
 
 //        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-
+//hahaha hackee
 
         robot.jewelDiverter.setPosition(JEWEL_READ);
 
@@ -182,43 +182,47 @@ public class AutoBlue extends LinearOpMode {
         robot.jewelColor.enableLed(false);
 
         robot.drive(-0.6);
-        sleep(400);
+        sleep(300);
         robot.stopDrive();
 
-        robot.strafeLeft(0.6);
+        switch (path) {
+            case LEFT:
+                robot.strafeLeft(0.6);
+                sleep(400);
+                robot.stopDrive();
+                break;
+            case CENTER:
+                robot.strafeLeft(0.6);
+                sleep(700);
+                robot.stopDrive();
+                break;
+            case RIGHT:
+                robot.strafeLeft(0.6);
+                sleep(900);
+                robot.stopDrive();
+                break;
+        }
+
+        robot.intakeL.setPower(1);
+        robot.intakeR.setPower(1);
+        robot.ramp.setPower(-0.45);
         sleep(800);
+        robot.ramp.setPower(0.45);
+        robot.intakeL.setPower(0);
+        robot.intakeR.setPower(0);
+        sleep(800);
+        robot.ramp.setPower(0);
+
+        sleep(1200);
+
+        robot.drive(-0.6);
+        sleep(300);
         robot.stopDrive();
 
-//        switch (path) {
-//            case LEFT:
-//                robot.strafeLeft(0.6);
-//                sleep(300);
-//                robot.stopDrive();
-//                break;
-//            case CENTER:
-//                robot.strafeLeft(0.6);
-//                sleep(800);
-//                robot.stopDrive();
-//                break;
-//            case RIGHT:
-//                robot.strafeLeft(0.6);
-//                sleep(1100);
-//                robot.stopDrive();
-//                break;
-//        }
-//
-//        robot.runIntake(-1);
-//        sleep(1000);
-//        robot.runIntake(0);
-//
-//        sleep(500);
-//
-//        robot.drive(1);
-//        sleep(400);
-//        robot.stopDrive();
-//
-//        robot.drive(-1);
-//        sleep(300);
+        robot.drive(0.6);
+        sleep(200);
+        robot.stopDrive();
+
         robot.stopDrive();
 
         // run until the end of the match (driver presses STOP)
