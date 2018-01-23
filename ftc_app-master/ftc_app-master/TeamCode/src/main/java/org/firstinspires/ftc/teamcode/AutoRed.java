@@ -190,17 +190,17 @@ public class AutoRed extends LinearOpMode {
 
         switch (path) {
             case LEFT:
-                robot.strafeLeft(0.6);
+                robot.strafeLeft(-0.6);
                 sleep(400);
                 robot.stopDrive();
                 break;
             case CENTER:
-                robot.strafeLeft(0.6);
+                robot.strafeLeft(-0.6);
                 sleep(700);
                 robot.stopDrive();
                 break;
             case RIGHT:
-                robot.strafeLeft(0.6);
+                robot.strafeLeft(-0.6);
                 sleep(900);
                 robot.stopDrive();
                 break;

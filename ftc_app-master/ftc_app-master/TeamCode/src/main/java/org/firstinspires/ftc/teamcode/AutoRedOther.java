@@ -192,12 +192,12 @@ public class AutoRedOther extends LinearOpMode {
             case LEFT:
                 break;
             case CENTER:
-                robot.strafeLeft(0.6);
+                robot.strafeLeft(-0.6);
                 sleep(700);
                 robot.stopDrive();
                 break;
             case RIGHT:
-                robot.strafeLeft(0.6);
+                robot.strafeLeft(-0.6);
                 sleep(900);
                 robot.stopDrive();
                 break;
