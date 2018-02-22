@@ -33,7 +33,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import static org.firstinspires.ftc.teamcode.MainHardware.EXTENDER_SPEED;
+import static org.firstinspires.ftc.teamcode.MainHardware.INTAKE_SPEED;
 import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
+import static org.firstinspires.ftc.teamcode.MainHardware.RAMP_SPEED;
 import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_GRABBED;
 import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_START;
 
@@ -78,33 +83,36 @@ public class TeleOpMain extends OpMode {
         robot.backLeft.setPower(v3);
         robot.backRight.setPower(v4);
 
-        telemetry.addData("r: ", r);
-        telemetry.addData("robotAngle: ", robotAngle);
-        telemetry.addData("rightX: ", rightX);
+        telemetry.addData("Distance (cm)",
+                robot.wallDistance.getDistance(DistanceUnit.CM));
+
+        telemetry.addData("Raw Angle 1", robot.imu.getAngularOrientation().firstAngle);
+
+        robot.composeTelemetry(telemetry);
 
         if (gamepad1.right_bumper) {
-            robot.intakeL.setPower(1);
-            robot.intakeR.setPower(1);
+            robot.intakeL.setPower(INTAKE_SPEED);
+            robot.intakeR.setPower(INTAKE_SPEED);
         } else if (gamepad1.left_bumper){
-            robot.intakeL.setPower(-1);
-            robot.intakeR.setPower(-1);
+            robot.intakeL.setPower(-INTAKE_SPEED);
+            robot.intakeR.setPower(-INTAKE_SPEED);
         } else {
             robot.intakeL.setPower(0);
             robot.intakeR.setPower(0);
         }
 
         if (gamepad2.dpad_up) {
-            robot.ramp.setPower(-0.45);
+            robot.ramp.setPower(-RAMP_SPEED);
         } else if (gamepad2.dpad_down){
-            robot.ramp.setPower(0.45);
+            robot.ramp.setPower(RAMP_SPEED);
         } else {
             robot.ramp.setPower(0);
         }
 
         if (gamepad2.dpad_left) {
-            robot.relicExtender.setPower(1);
+            robot.relicExtender.setPower(EXTENDER_SPEED);
         } else if (gamepad2.dpad_right) {
-            robot.relicExtender.setPower(-1);
+            robot.relicExtender.setPower(-EXTENDER_SPEED);
         } else {
             robot.relicExtender.setPower(0);
         }

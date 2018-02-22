@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -48,7 +49,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.components.Pid;
 
 import java.util.Locale;
 
@@ -72,9 +75,15 @@ public class MainHardware
     public CRServo relicPivot;
     public Servo       relicGrab;
 
-//    public BNO055IMU imu;
+    public DistanceSensor wallDistance;
+
+    public BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
+
+    public static final double INTAKE_SPEED = 1.0,
+                               RAMP_SPEED = 0.45,
+                               EXTENDER_SPEED = 1.0;
 
     public static final double JEWEL_START = 0.8;
     public static final double JEWEL_READ = 0.15;
@@ -83,6 +92,18 @@ public class MainHardware
     public static final double RELIC_PIVOT_START = 0;
     public static final double RELIC_GRAB_START = 0.7;
     public static final double RELIC_GRAB_GRABBED = 0;
+
+    public static final double DISTANCE_FROM_WALL = 4;
+    public static final double DISTANCE_FROM_COLUMN = 2;
+
+    public static  final double drivePidKp = 1;     // Tuning variable for PID.
+    public static final double drivePidTi = 1.0;   // Eliminate integral error in 1 sec.
+    public static final double  drivePidTd = 0.1;   // Account for error in 0.1 sec.
+
+    // Protect against integral windup by limiting integral term.
+
+    public static final double drivePidIntMax = 1.0;  // Limit to max speed.
+    public static final double driveOutMax = 1.0;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -142,17 +163,18 @@ public class MainHardware
         relicGrab.setPosition(RELIC_GRAB_START);
 
         jewelColor = hwMap.colorSensor.get("jewel_color");
+        wallDistance = hwMap.get(DistanceSensor.class, "distance");
 
         // Define all parameters for and initialize the IMU
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        parameters.loggingEnabled = true;
-//        parameters.loggingTag = "IMU";
-//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-//
-//        imu = hwMap.get(BNO055IMU.class, "imu");
-//        imu.initialize(parameters);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
 
     }
@@ -204,44 +226,58 @@ public class MainHardware
         intakeR.setPower(power);
     }
 
+    void driveToDistance(double distance, double speed) {
+        while (wallDistance.getDistance(DistanceUnit.INCH) < distance) {
+            drive(speed);
+        }
+
+        stopDrive();
+    }
+
+    public static double boundHalfDegrees(double angle_degrees) {
+        while (angle_degrees >= 180.0) angle_degrees -= 360.0;
+        while (angle_degrees < -180.0) angle_degrees += 360.0;
+        return angle_degrees;
+    }
+
 
 
     //----------------------------------------------------------------------------------------------
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
-//   void composeTelemetry(Telemetry telemetry) {
-//
-//        // At the beginning of each telemetry update, grab a bunch of data
-//        // from the IMU that we will then display in separate lines.
-//        telemetry.addAction(new Runnable() { @Override public void run()
-//        {
-//            // Acquiring the angles is relatively expensive; we don't want
-//            // to do that in each of the three items that need that info, as that's
-//            // three times the necessary expense.
-//            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//            gravity  = imu.getGravity();
-//        }
-//        });
-//
-//        telemetry.addLine()
-//                .addData("status", new Func<String>() {
-//                    @Override public String value() {
-//                        return imu.getSystemStatus().toShortString();
-//                    }
-//                })
-//                .addData("calib", new Func<String>() {
-//                    @Override public String value() {
-//                        return imu.getCalibrationStatus().toString();
-//                    }
-//                });
-//
-//        telemetry.addLine()
-//                .addData("heading", new Func<String>() {
-//                    @Override public String value() {
-//                        return formatAngle(angles.angleUnit, angles.firstAngle);
-//                    }
-//                })
+   void composeTelemetry(Telemetry telemetry) {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = imu.getGravity();
+        }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+               });
 //                .addData("roll", new Func<String>() {
 //                    @Override public String value() {
 //                        return formatAngle(angles.angleUnit, angles.secondAngle);
@@ -267,19 +303,19 @@ public class MainHardware
 //                                        + gravity.zAccel*gravity.zAccel));
 //                    }
 //                });
-//    }
-//
-//    //----------------------------------------------------------------------------------------------
-//    // Formatting
-//    //----------------------------------------------------------------------------------------------
-//
-//    String formatAngle(AngleUnit angleUnit, double angle) {
-//        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-//    }
-//
-//    String formatDegrees(double degrees){
-//        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-//    }
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Formatting
+    //----------------------------------------------------------------------------------------------
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
 
 
  }
