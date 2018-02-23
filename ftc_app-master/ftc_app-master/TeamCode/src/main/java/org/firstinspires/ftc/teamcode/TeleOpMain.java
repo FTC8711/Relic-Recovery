@@ -41,6 +41,8 @@ import static org.firstinspires.ftc.teamcode.MainHardware.JEWEL_START;
 import static org.firstinspires.ftc.teamcode.MainHardware.RAMP_SPEED;
 import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_GRABBED;
 import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_GRAB_START;
+import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_PIVOT_START;
+import static org.firstinspires.ftc.teamcode.MainHardware.RELIC_PIVOT_UP;
 
 @TeleOp(name="TeleOp - Main", group="Competition TeleOp")
 
@@ -88,8 +90,6 @@ public class TeleOpMain extends OpMode {
 
         telemetry.addData("Raw Angle 1", robot.imu.getAngularOrientation().firstAngle);
 
-        robot.composeTelemetry(telemetry);
-
         if (gamepad1.right_bumper) {
             robot.intakeL.setPower(INTAKE_SPEED);
             robot.intakeR.setPower(INTAKE_SPEED);
@@ -118,12 +118,13 @@ public class TeleOpMain extends OpMode {
         }
 
         if (gamepad2.x) {
-            robot.relicPivot.setPower(1);
-        } else if (gamepad2.b) {
-            robot.relicPivot.setPower(-1);
-        } else {
-            robot.relicPivot.setPower(0);
+            robot.relicPivot.setPosition(RELIC_PIVOT_START);
         }
+
+        if (gamepad2.b) {
+            robot.relicPivot.setPosition(RELIC_PIVOT_UP);
+        }
+
 
         if (gamepad2.a) {
             robot.relicGrab.setPosition(RELIC_GRAB_GRABBED);

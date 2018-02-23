@@ -72,7 +72,7 @@ public class MainHardware
     public Servo       jewelDiverter;
     public ColorSensor jewelColor;
 
-    public CRServo relicPivot;
+    public Servo relicPivot;
     public Servo       relicGrab;
 
     public DistanceSensor wallDistance;
@@ -86,12 +86,14 @@ public class MainHardware
                                EXTENDER_SPEED = 1.0;
 
     public static final double JEWEL_START = 0.8;
-    public static final double JEWEL_READ = 0.15;
+    public static final double JEWEL_READ = 0.25;
     public static final double RED_THRESHOLD = 40;
 
-    public static final double RELIC_PIVOT_START = 0;
     public static final double RELIC_GRAB_START = 0.7;
     public static final double RELIC_GRAB_GRABBED = 0;
+
+    public static final double RELIC_PIVOT_START = 0;
+    public static final double RELIC_PIVOT_UP = 1;
 
     public static final double DISTANCE_FROM_WALL = 4;
     public static final double DISTANCE_FROM_COLUMN = 2;
@@ -156,8 +158,8 @@ public class MainHardware
         jewelDiverter = hwMap.get(Servo.class, "jewel");
         jewelDiverter.setPosition(JEWEL_START);
 
-        relicPivot = hwMap.get(CRServo.class, "relic_pivot");
-        relicPivot.setPower(0);
+        relicPivot = hwMap.get(Servo.class, "relic_pivot");
+        relicPivot.setPosition(RELIC_PIVOT_START);
 
         relicGrab = hwMap.get(Servo.class, "relic_grab");
         relicGrab.setPosition(RELIC_GRAB_START);

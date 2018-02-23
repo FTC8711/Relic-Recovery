@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.components.Pid;
@@ -18,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.MainHardware.drivePidTi;
  * Created by 21maffetone on 2/21/18.
  */
 
+@Autonomous(name = "Crypto Test", group = "Competition Auto")
 public class DriveToColumn extends LinearOpMode {
 
     MainHardware robot = new MainHardware();
@@ -38,6 +42,7 @@ public class DriveToColumn extends LinearOpMode {
         double prevTime = 0;
 
         waitForStart();
+        runtime.startTime();
 
         double desiredHeading = robot.imu.getAngularOrientation().firstAngle;
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(),
@@ -45,17 +50,26 @@ public class DriveToColumn extends LinearOpMode {
 
 
         // drive forwards in a straight line
-        while (searchingForColumn && runtime.seconds() < 2 && opModeIsActive()) {
+        while (opModeIsActive() && searchingForColumn) {
+
+            telemetry.addData("Distance", robot.wallDistance.getDistance(DistanceUnit.CM));
+            telemetry.addData("hi", (robot.wallDistance.getDistance(DistanceUnit.CM) != DistanceSensor.distanceOutOfRange));
+
+            telemetry.update();
 
             double gyroHeading = robot.imu.getAngularOrientation().firstAngle;
             double angleDifference = boundHalfDegrees
                     (desiredHeading - gyroHeading);
             double turn = 0.8 * (-1.0/80.0) * angleDifference;
 
-            robot.manualDrive(driveSpeed - turn,
+            robot.manualDrive(-driveSpeed - turn,
                     driveSpeed + turn,
-                    driveSpeed + turn,
+                    -driveSpeed + turn,
                     driveSpeed - turn);
+            }
+
+            if (robot.wallDistance.getDistance(DistanceUnit.CM) != DistanceSensor.distanceOutOfRange) {
+                searchingForColumn = false;
             }
 
 

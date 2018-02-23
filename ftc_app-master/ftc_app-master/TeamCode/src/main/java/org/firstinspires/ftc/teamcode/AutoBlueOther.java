@@ -178,27 +178,29 @@ public class AutoBlueOther extends LinearOpMode {
         robot.jewelColor.enableLed(false);
 
         robot.drive(-0.6);
-        sleep(400);
+        sleep(800);
         robot.stopDrive();
 
-        robot.turnLeft(0.6);
-        sleep(650);
-        robot.stopDrive();
-
-        switch (path) {
-            case LEFT:
-                break;
-            case CENTER:
-                robot.strafeLeft(0.6);
-                sleep(700);
-                robot.stopDrive();
-                break;
-            case RIGHT:
-                robot.strafeLeft(0.6);
-                sleep(900);
-                robot.stopDrive();
-                break;
+        while (robot.imu.getAngularOrientation().firstAngle > -90.0) {
+            robot.turnLRight(0.5);
         }
+
+        robot.stopDrive();
+
+//        switch (path) {
+//            case LEFT:
+//                break;
+//            case CENTER:
+//                robot.strafeLeft(0.6);
+//                sleep(700);
+//                robot.stopDrive();
+//                break;
+//            case RIGHT:
+//                robot.strafeLeft(0.6);
+//                sleep(900);
+//                robot.stopDrive();
+//                break;
+//        }
 
         robot.intakeL.setPower(1);
         robot.intakeR.setPower(1);
