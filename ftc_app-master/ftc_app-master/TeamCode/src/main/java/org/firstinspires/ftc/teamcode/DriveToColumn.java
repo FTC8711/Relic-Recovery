@@ -62,6 +62,7 @@ public class DriveToColumn extends LinearOpMode {
                     (desiredHeading - gyroHeading);
             double turn = 0.8 * (-1.0/80.0) * angleDifference;
 
+            // strafe left, keeping heading (negative drive speed to strafe right)
             robot.manualDrive(-driveSpeed - turn,
                     driveSpeed + turn,
                     -driveSpeed + turn,
