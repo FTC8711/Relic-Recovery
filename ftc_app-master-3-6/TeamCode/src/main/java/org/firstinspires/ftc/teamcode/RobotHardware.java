@@ -25,6 +25,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class RobotHardware {
 
+    public enum StartPosition {
+        RED_CLOSE,
+        RED_FAR,
+        BLUE_CLOSE,
+        BLUE_FAR
+    }
+
+    public static StartPosition kStartPosition;
+
     // Drive subsystem
     private DcMotor driveFrontLeft;
     private DcMotor driveFrontRight;
@@ -283,6 +292,18 @@ public class RobotHardware {
 
     public int getDriveCounts() {
         return driveFrontLeft.getCurrentPosition();
+    }
+
+    public void resetEncoders() {
+        driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void activateTracking() {
