@@ -103,5 +103,17 @@ public class TeleOpMain extends OpMode {
         } else if (gamepad2.y) {
             robot.setRelicGrabber(Constants.RELIC_GRABBER_OPEN);
         }
+
+//        if (gamepad1.a) {
+//            robot.setDrive(1, 0, 0, 0);
+//        } else if (gamepad1.x) {
+//            robot.setDrive(0, 1, 0, 0);
+//        } else if (gamepad1.y) {
+//            robot.setDrive(0, 0, 1, 0);
+//        } else if (gamepad1.b) {
+//            robot.setDrive(0, 0, 0, 1);
+//        } else {
+//            robot.stopDrive();
+//        }
     }
 }

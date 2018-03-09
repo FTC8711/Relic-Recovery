@@ -5,8 +5,10 @@ import android.graphics.Color;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -33,6 +35,7 @@ public class RobotHardware {
     }
 
     public static StartPosition kStartPosition;
+    public static LinearOpMode kActiveAuto;
 
     // Drive subsystem
     private DcMotor driveFrontLeft;
@@ -102,6 +105,9 @@ public class RobotHardware {
         driveBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
         // Ensure all drive subsystem motors are at zero power/stopped
         driveFrontLeft.setPower(0);
         driveFrontRight.setPower(0);
@@ -128,6 +134,8 @@ public class RobotHardware {
         // Set intake subsystem motors to not use encoders as they are not connected
         intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        intakeRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set intake subsystem motors to float or "coast" upon receiving zero power, and
         // not attempt resistance

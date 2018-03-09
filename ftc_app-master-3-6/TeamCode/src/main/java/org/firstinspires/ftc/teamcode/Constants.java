@@ -9,11 +9,11 @@ public class Constants {
     public static final double RELIC_PIVOT_DOWN = 0,
                                RELIC_PIVOT_UP = 1;
 
-    public static final double RELIC_GRABBER_OPEN = 0.7,
+    public static final double RELIC_GRABBER_OPEN = 0.6,
                                RELIC_GRABBER_CLOSED = 0;
 
-    public static final double JEWEL_ARM_STOW = 0.8,
-                               JEWEL_ARM_READ = 0.25;
+    public static final double JEWEL_ARM_STOW = 0.85,
+                               JEWEL_ARM_READ = 0.38;
 
     public static final double DRIVE_TURN_SPEED = 0.4,
                                DRIVE_NORMAL_SPEED = 0.6;

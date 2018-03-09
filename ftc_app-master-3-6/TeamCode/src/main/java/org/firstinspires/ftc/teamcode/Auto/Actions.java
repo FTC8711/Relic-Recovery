@@ -24,18 +24,22 @@ public class Actions {
 
     // Action for turning to a desired angle using the integrated IMU in the REV expansion
     // hub. Angle is relative to where the robot started (0 deg).
-    public static void turnToAngle(double angle) throws InterruptedException {
+    public static void turnToAngle(double angle, double v, double threshold) throws InterruptedException {
 
-        // While the robot's heading is outside the threshold of the desired angle (+- 2),
+        // While the robot's heading is outside the threshold of the desired angle (+- the threshold),
         // turn in the appropriate direction at a slow turn speed
-        while (mRobot.getHeading() > (angle + 2.0) && mRobot.getHeading() < (angle - 2.0)) {
+        while (((mRobot.getHeading() > (angle + threshold) || mRobot.getHeading() < (angle - threshold)) && RobotHardware.kActiveAuto.opModeIsActive())
+                && RobotHardware.kActiveAuto.opModeIsActive()) {
+
+            RobotHardware.kActiveAuto.telemetry.addData("Heading", mRobot.getHeading());
+            RobotHardware.kActiveAuto.telemetry.update();
 
             if (mRobot.getHeading() < angle) {
-                mRobot.mecanumDrive(RobotHardware.DriveMode.TURN_RIGHT,
-                        Constants.DRIVE_TURN_SPEED, 0);
-            } else {
                 mRobot.mecanumDrive(RobotHardware.DriveMode.TURN_LEFT,
-                        Constants.DRIVE_TURN_SPEED, 0);
+                        v, 0);
+            } else {
+                mRobot.mecanumDrive(RobotHardware.DriveMode.TURN_RIGHT,
+                        v, 0);
             }
         }
 
@@ -53,7 +57,7 @@ public class Actions {
 
         // Only keep the action running while the elapsed time is less than the desired time
         // to drive
-        while (System.currentTimeMillis() - startTime < time) {
+        while (System.currentTimeMillis() - startTime < time && RobotHardware.kActiveAuto.opModeIsActive()) {
 
             // Calculate a proportional "turn" value to adjust any heading error that occurs
             // while driving
@@ -102,7 +106,25 @@ public class Actions {
         mRobot.resetEncoders();
 
         // Run this action until the FL encoder reaches the target position
-        while (mRobot.getDriveCounts() * direction != target) {
+        while (mRobot.getDriveCounts() * direction < target && RobotHardware.kActiveAuto.opModeIsActive()) {
+
+            // Driving forward, strafing right, and turning right all spin the FL motor forward,
+            // so its encoder reading goes up as we proceed, which is what we want. However, the
+            // other 3 drive modes spin the FL motors backwards as they proceed, so I set our
+            // direction multiplier to -1.
+            switch (mode) {
+                case FORWARD:
+                case STRAFE_RIGHT:
+                case TURN_RIGHT:
+                default:
+                    direction = (mRobot.getDriveCounts() < target) ? 1.0 : -1.0;
+                    break;
+                case BACKWARD:
+                case STRAFE_LEFT:
+                case TURN_LEFT:
+                    direction = (mRobot.getDriveCounts() < target) ? -1.0 : 1.0;
+                    break;
+            }
 
             // Calculate the proportional heading error and correct for it while driving
             double gyroHeading = mRobot.getHeading();
@@ -110,7 +132,7 @@ public class Actions {
                     (desiredHeading - gyroHeading);
             double turn = 0.8 * (-1.0/80.0) * angleDifference;
 
-            mRobot.mecanumDrive(mode, direction * v, turn);
+            mRobot.mecanumDrive(mode, direction * v, 0);
         }
 
         // Stop driving once the target position has been reached
