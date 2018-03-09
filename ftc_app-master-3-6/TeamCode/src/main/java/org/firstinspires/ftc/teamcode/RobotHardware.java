@@ -93,10 +93,10 @@ public class RobotHardware {
         driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Set drive subsystem encoders to achieve velocity using encoders
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set drive subsystem encoders to apply resistance to outside forces
         // upon receiving zero power
@@ -308,10 +308,10 @@ public class RobotHardware {
         driveBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void activateTracking() {

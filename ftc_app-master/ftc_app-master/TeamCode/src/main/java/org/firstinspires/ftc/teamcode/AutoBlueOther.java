@@ -181,8 +181,8 @@ public class AutoBlueOther extends LinearOpMode {
         sleep(800);
         robot.stopDrive();
 
-        while (robot.imu.getAngularOrientation().firstAngle > -90.0) {
-            robot.turnLRight(0.5);
+        while (robot.imu.getAngularOrientation().firstAngle < 90.0) {
+            robot.turnRight(0.5);
         }
 
         robot.stopDrive();

@@ -28,7 +28,7 @@ public class Actions {
 
         // While the robot's heading is outside the threshold of the desired angle (+- the threshold),
         // turn in the appropriate direction at a slow turn speed
-        while (((mRobot.getHeading() > (angle + threshold) || mRobot.getHeading() < (angle - threshold)) && RobotHardware.kActiveAuto.opModeIsActive())
+        while ((mRobot.getHeading() > (angle + threshold) || mRobot.getHeading() < (angle - threshold))
                 && RobotHardware.kActiveAuto.opModeIsActive()) {
 
             RobotHardware.kActiveAuto.telemetry.addData("Heading", mRobot.getHeading());
@@ -140,7 +140,7 @@ public class Actions {
     }
 
     // Binds an angle to -180 to 180 deg to avoid drastic turns while correcting heading
-    private static double boundHalfDegrees(double angle_degrees) {
+    public static double boundHalfDegrees(double angle_degrees) {
         while (angle_degrees >= 180.0) angle_degrees -= 360.0;
         while (angle_degrees < -180.0) angle_degrees += 360.0;
 

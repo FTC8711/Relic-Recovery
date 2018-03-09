@@ -184,8 +184,14 @@ public class AutoRed extends LinearOpMode {
         sleep(300);
         robot.stopDrive();
 
-        robot.turnLeft(0.6);
-        sleep(1300);
+//        robot.turnLeft(0.6);
+//        sleep(1300);
+//        robot.stopDrive();
+
+        while (robot.imu.getAngularOrientation().firstAngle < 160.0) {
+            robot.turnRight(0.5);
+        }
+
         robot.stopDrive();
 
         switch (path) {

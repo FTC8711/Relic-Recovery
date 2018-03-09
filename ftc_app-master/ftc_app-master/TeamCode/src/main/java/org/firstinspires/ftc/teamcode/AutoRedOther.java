@@ -150,6 +150,8 @@ public class AutoRedOther extends LinearOpMode {
             sleep(400);
             robot.stopDrive();
 
+            robot.jewelDiverter.setPosition(JEWEL_START);
+
         }
 
         else if (hsvValues[0] > 60) {
@@ -176,17 +178,25 @@ public class AutoRedOther extends LinearOpMode {
             telemetry.addData("Hue ", hsvValues[0]);
 
             robot.drive(0.6);
-            sleep(400);
+            sleep(300);
             robot.stopDrive();
+
+            robot.jewelDiverter.setPosition(JEWEL_START);
         }
 
         robot.drive(0.6);
-        sleep(400);
+        sleep(600);
         robot.stopDrive();
 
         robot.turnLeft(0.6);
-        sleep(650);
+        sleep(850);
         robot.stopDrive();
+
+//        while (robot.imu.getAngularOrientation().firstAngle > -90.0) {
+//            robot.turnLeft(0.5);
+//        }
+//
+//        robot.stopDrive();
 
         switch (path) {
             case LEFT:
@@ -216,7 +226,7 @@ public class AutoRedOther extends LinearOpMode {
         sleep(1200);
 
         robot.drive(-0.6);
-        sleep(200);
+        sleep(500);
         robot.stopDrive();
 
         robot.drive(0.6);
