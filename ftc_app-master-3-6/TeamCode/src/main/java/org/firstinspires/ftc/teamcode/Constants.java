@@ -13,7 +13,7 @@ public class Constants {
                                RELIC_GRABBER_CLOSED = 0;
 
     public static final double JEWEL_ARM_STOW = 0.85,
-                               JEWEL_ARM_READ = 0.38;
+                               JEWEL_ARM_READ = 0.33;
 
     public static final double DRIVE_TURN_SPEED = 0.4,
                                DRIVE_NORMAL_SPEED = 0.6;

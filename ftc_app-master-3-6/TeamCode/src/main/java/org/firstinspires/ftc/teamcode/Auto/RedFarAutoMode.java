@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -17,9 +15,9 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
  * and are on the "close" balancing stone RELATIVE TO THE RELIC RECOVERY ZONE/AUDIENCE.
  */
 
-@Autonomous(name = "Red - Close", group = "Competition Auto")
+@Autonomous(name = "Red - Far", group = "Competition Auto")
 
-public class RedCloseAutoMode extends LinearOpMode {
+public class RedFarAutoMode extends LinearOpMode {
 
     private RelicRecoveryVuMark cryptokey;
     private ElapsedTime timer = new ElapsedTime();
@@ -57,11 +55,10 @@ public class RedCloseAutoMode extends LinearOpMode {
         while ((timer.seconds() < 2 && cryptokey == RelicRecoveryVuMark.UNKNOWN)
                 && opModeIsActive()) {
             cryptokey = robot.getCryptokey();
+            telemetry.addData("Cryptokey: ", cryptokey);
         }
 
         robot.deactivateTracking();
-
-        telemetry.addData("Cryptokey: ", cryptokey);
 
         // Lower the jewel arm and wait 1.5 seconds before proceeding to allow it to lower
         robot.setJewelArm(Constants.JEWEL_ARM_READ);
@@ -74,20 +71,20 @@ public class RedCloseAutoMode extends LinearOpMode {
 
             Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 600);
             robot.setJewelArm(Constants.JEWEL_ARM_STOW);
-            Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 200);
+            Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 1000);
 
             // If its blue, turn the other direction to knock it off and then drive off the
             // balancing stone
         } else if (robot.getJewelColorHue() > Constants.BLUE_MIN_THRESHOLD) {
             telemetry.addData("Path", "Jewel is BLUE");
-            Actions.turnToAngle(-7.0, 0.3, 2);
+            Actions.turnToAngle(-5.0, 0.3, 2);
 
             sleep(500);
             // Turn back to the starting angle (0 deg) and raise the jewel arm back up
             robot.setJewelArm(Constants.JEWEL_ARM_STOW);
             Actions.turnToAngle(0, 0.3, 2);
 
-            Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 800);
+            Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 1600);
 
             // Finally, if we get no reading assume that the jewel is red since the sensor
             // usually is just missing a red jewel if it gets no reading
@@ -95,21 +92,15 @@ public class RedCloseAutoMode extends LinearOpMode {
             telemetry.addData("Path", "Jewel is RED (no reading)");
             Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 600);
             robot.setJewelArm(Constants.JEWEL_ARM_STOW);
-            Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 200);
+            Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 1000);
 
         }
 
+        Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 400);
         sleep(500);
         // Correct angle again before proceeded
-        Actions.turnToAngle(0, 0.3, 1.5);
-
-        // Drive forward to about the first cryptobox column
-        Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.3, 500);
-        // Turn so that the back of the bot is facing the cryptobox
-        Actions.turnToAngle(90, 0.5, 2);
- ;       Actions.driveToPosition(RobotHardware.DriveMode.BACKWARD, 0.3, -400);
-
-
+        Actions.turnToAngle(175, 0.6, 1.5);
+        Actions.driveToPosition(RobotHardware.DriveMode.BACKWARD, 0.3, -400);
 
         // TODO: Implement glyph scoring portion of auto
 
@@ -144,7 +135,7 @@ public class RedCloseAutoMode extends LinearOpMode {
             double turn = 0.7 * (-1.0/80.0) * angleDifference;
 
             // Drive the motors with this turn offset
-            robot.mecanumDrive(RobotHardware.DriveMode.STRAFE_RIGHT, 0.55, -turn);
+            robot.mecanumDrive(RobotHardware.DriveMode.STRAFE_RIGHT, 0.55, turn);
 
         }
 
@@ -162,7 +153,7 @@ public class RedCloseAutoMode extends LinearOpMode {
             double turn = 0.7 * (-1.0/80.0) * angleDifference;
 
             // Drive the motors with this turn offset
-            robot.mecanumDrive(RobotHardware.DriveMode.STRAFE_RIGHT, 0.55, -turn);
+            robot.mecanumDrive(RobotHardware.DriveMode.STRAFE_RIGHT, 0.55, turn);
 
             if (robot.getRangeDistance() <= wallDistance - 6) {
                 columnsPassed++;
@@ -173,23 +164,25 @@ public class RedCloseAutoMode extends LinearOpMode {
             }
         }
 
-        telemetry.addData("Columns", columnsPassed);
-        telemetry.update();
-
-        Actions.turnToAngle(90, 0.3, 1);
-        Actions.turnToAngle(90, 0.3, 1);
+        Actions.turnToAngle(0, 0.3, 1);
+        Actions.turnToAngle(0, 0.3, 1);
 
         sleep(500);
 
-        Actions.driveByTime(RobotHardware.DriveMode.BACKWARD, 0.4, 1000);
-
         robot.setIntake(Constants.INTAKE_SPEED);
-        Actions.setRampPosition(-470.0);
+        robot.setRamp(-0.4);
+        sleep(700);
+        robot.setRamp(0);
         robot.setIntake(0);
 
-        Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, 0.4, 900);
-        Actions.driveByTime(RobotHardware.DriveMode.BACKWARD, 0.4, 1500);
-        Actions.driveByTime(RobotHardware.DriveMode.FORWARD, 0.4, 700);
+        sleep(200);
+
+        robot.setRamp(Constants.RAMP_SPEED);
+        sleep(2300);
+        robot.setRamp(0);
+
+        Actions.driveByTime(RobotHardware.DriveMode.BACKWARD, 0.4, 800);
+        Actions.driveByTime(RobotHardware.DriveMode.FORWARD, 0.4, 800);
 
 //        Actions.driveToPosition(RobotHardware.DriveMode.FORWARD, -0.4, -400);
 

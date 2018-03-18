@@ -106,38 +106,62 @@ public class Actions {
         mRobot.resetEncoders();
 
         // Run this action until the FL encoder reaches the target position
-        while (mRobot.getDriveCounts() * direction < target && RobotHardware.kActiveAuto.opModeIsActive()) {
+        if (mode != RobotHardware.DriveMode.BACKWARD) {
+            while (mRobot.getDriveCounts() * direction < target && RobotHardware.kActiveAuto.opModeIsActive()) {
 
-            // Driving forward, strafing right, and turning right all spin the FL motor forward,
-            // so its encoder reading goes up as we proceed, which is what we want. However, the
-            // other 3 drive modes spin the FL motors backwards as they proceed, so I set our
-            // direction multiplier to -1.
-            switch (mode) {
-                case FORWARD:
-                case STRAFE_RIGHT:
-                case TURN_RIGHT:
-                default:
-                    direction = (mRobot.getDriveCounts() < target) ? 1.0 : -1.0;
-                    break;
-                case BACKWARD:
-                case STRAFE_LEFT:
-                case TURN_LEFT:
-                    direction = (mRobot.getDriveCounts() < target) ? -1.0 : 1.0;
-                    break;
+                // Driving forward, strafing right, and turning right all spin the FL motor forward,
+                // so its encoder reading goes up as we proceed, which is what we want. However, the
+                // other 3 drive modes spin the FL motors backwards as they proceed, so I set our
+                // direction multiplier to -1.
+                switch (mode) {
+                    case FORWARD:
+                    case STRAFE_RIGHT:
+                    case TURN_RIGHT:
+                    default:
+                        direction = (mRobot.getDriveCounts() < target) ? 1.0 : -1.0;
+                        break;
+                    case BACKWARD:
+                    case STRAFE_LEFT:
+                    case TURN_LEFT:
+                        direction = (mRobot.getDriveCounts() < target) ? -1.0 : 1.0;
+                        break;
+                }
+
+                // Calculate the proportional heading error and correct for it while driving
+                double gyroHeading = mRobot.getHeading();
+                double angleDifference = boundHalfDegrees
+                        (desiredHeading - gyroHeading);
+                double turn = 0.8 * (-1.0 / 80.0) * angleDifference;
+
+                mRobot.mecanumDrive(mode, direction * v, 0);
             }
-
-            // Calculate the proportional heading error and correct for it while driving
-            double gyroHeading = mRobot.getHeading();
-            double angleDifference = boundHalfDegrees
-                    (desiredHeading - gyroHeading);
-            double turn = 0.8 * (-1.0/80.0) * angleDifference;
-
-            mRobot.mecanumDrive(mode, direction * v, 0);
+        } else {
+            while (mRobot.getDriveCounts() > target && RobotHardware.kActiveAuto.opModeIsActive()) {
+                mRobot.mecanumDrive(RobotHardware.DriveMode.BACKWARD, v, 0);
+            }
         }
 
         // Stop driving once the target position has been reached
         mRobot.stopDrive();
     }
+
+    public static void setRampPosition(double position) {
+        boolean pastTarget = false;
+        mRobot.resetRampEncoder();
+        while (!pastTarget && RobotHardware.kActiveAuto.opModeIsActive()) {
+            if (position < 0) {
+                mRobot.setRamp(-Constants.RAMP_SPEED);
+                pastTarget = mRobot.getRampEncoder() < position;
+            } else {
+                mRobot.setRamp(Constants.RAMP_SPEED);
+                pastTarget = mRobot.getRampEncoder() > position;
+            }
+        }
+
+        mRobot.setRamp(0);
+
+    }
+
 
     // Binds an angle to -180 to 180 deg to avoid drastic turns while correcting heading
     public static double boundHalfDegrees(double angle_degrees) {

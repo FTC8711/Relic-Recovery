@@ -40,6 +40,7 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("Range Sensor Distance (cm)", robot.getRangeDistance());
         telemetry.addData("Heading", robot.getHeading());
         telemetry.addData("Encoder Position (FL)", robot.getDriveCounts());
+        telemetry.addData("Ramp Position", robot.getRampEncoder());
 
 
         // Keep the jewel arm in the up position constantly during TeleOp to prevent it from

@@ -114,18 +114,8 @@ public class RobotHardware {
         driveBackLeft.setPower(0);
         driveBackRight.setPower(0);
 
-        // Define parameters for the internal IMU
-        BNO055IMU.Parameters imuParameters = new BNO055IMU.Parameters();
-        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imuParameters.loggingEnabled = true;
-        imuParameters.loggingTag = "IMU";
-        imuParameters.accelerationIntegrationAlgorithm
-                = new JustLoggingAccelerationIntegrator();
-
         // Initialize the imu from the hardware map with the parameters previously defined
         imu = mHwMap.get(BNO055IMU.class, "IMU");
-        imu.initialize(imuParameters);
 
         // Initialize intake subsystem motors from the hardware map
         intakeLeft = mHwMap.get(DcMotor.class, "I0");
@@ -149,12 +139,16 @@ public class RobotHardware {
         // Initialize glyph scoring subsystem motor from the hardware map
         rampActuator = mHwMap.get(DcMotor.class, "G0");
 
+        rampActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // Set glyph scoring subsystem motor to not use encoders as they are not connected
         rampActuator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set glyph scoring subsystem motor to apply resistance to outside forces upon
         // receiving zero power to prevent backtracking of the ramp
         rampActuator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
         // Ensure all glyph scoring subsystem motors are at zero power/stopped
         rampActuator.setPower(0);
@@ -202,7 +196,9 @@ public class RobotHardware {
 
         // Enable the led of the jewel subsystem color sensor by default to aid in reading
         jewelColorSensor.enableLed(true);
+    }
 
+    public void vuforiaInit() {
         int cameraMonitorViewId = mHwMap.appContext.getResources().getIdentifier
                 ("cameraMonitorViewId", "id",
                         mHwMap.appContext.getPackageName());
@@ -258,6 +254,16 @@ public class RobotHardware {
     }
 
     public void startAccelerationIntegration() {
+        // Define parameters for the internal IMU
+        BNO055IMU.Parameters imuParameters = new BNO055IMU.Parameters();
+        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuParameters.loggingEnabled = true;
+        imuParameters.loggingTag = "IMU";
+        imuParameters.accelerationIntegrationAlgorithm
+                = new JustLoggingAccelerationIntegrator();
+
+        imu.initialize(imuParameters);
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
@@ -268,6 +274,15 @@ public class RobotHardware {
 
     public void setRamp(double v) {
         rampActuator.setPower(v);
+    }
+
+    public double getRampEncoder() {
+        return rampActuator.getCurrentPosition();
+    }
+
+    public void resetRampEncoder() {
+        rampActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rampActuator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public double getRangeDistance() {
@@ -316,6 +331,9 @@ public class RobotHardware {
 
     public void activateTracking() {
         relicTrackables.activate();
+    }
+    public void deactivateTracking() {
+        relicTrackables.deactivate();
     }
 
     public RelicRecoveryVuMark getCryptokey() {
